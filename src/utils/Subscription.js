@@ -16,7 +16,7 @@ function createListenerCollection() {
       next = CLEARED
       current = CLEARED
     },
-
+    // 通知
     notify() {
       const listeners = current = next
       for (let i = 0; i < listeners.length; i++) {
@@ -52,12 +52,12 @@ export default class Subscription {
     this.unsubscribe = null
     this.listeners = nullListeners
   }
-
+  // 添加层级订阅
   addNestedSub(listener) {
     this.trySubscribe()
     return this.listeners.subscribe(listener)
   }
-
+  // 通知层级订阅
   notifyNestedSubs() {
     this.listeners.notify()
   }
@@ -65,12 +65,17 @@ export default class Subscription {
   isSubscribed() {
     return Boolean(this.unsubscribe)
   }
-
+  /**
+   * 通过 context 传递 subscription，
+   * 组件订阅前检查，如果父（祖先）组件已经订阅，
+   * 则将子组件的回调函数 stateChange 订阅到父（向上找到最开始的祖先）组件的观察者，
+   * 否则订阅到 redux store
+   */
   trySubscribe() {
     if (!this.unsubscribe) {
       this.unsubscribe = this.parentSub
-        ? this.parentSub.addNestedSub(this.onStateChange)
-        : this.store.subscribe(this.onStateChange)
+        ? this.parentSub.addNestedSub(this.onStateChange) // 订阅到父（向上找到最开始的祖先）组件
+        : this.store.subscribe(this.onStateChange) // 订阅到 redux
  
       this.listeners = createListenerCollection()
     }

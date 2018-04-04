@@ -207,10 +207,17 @@ export default function connectAdvanced(
         // middle of the notification loop.
         this.notifyNestedSubs = this.subscription.notifyNestedSubs.bind(this.subscription)
       }
-
+      /**
+       * 父（祖先）组件需要更新，则执行 setState 重新 render，并在 ComponentDidUpdate 时通知子（孙）组件更新（触发回调函数）
+       * 父（祖先）组件不需要更新，直接通知子（孙）组件更新
+       */
       onStateChange() {
+        /**
+         * 重新计算当前 Connect 组件的 props，然后和前一次进行比较，如果不是同一个对象的话，就设置 
+         * this.selector.shouldComponentUpdate = true, 即更新当前组件
+         */
         this.selector.run(this.props)
-
+        
         if (!this.selector.shouldComponentUpdate) {
           this.notifyNestedSubs()
         } else {

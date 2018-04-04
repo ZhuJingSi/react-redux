@@ -50,8 +50,8 @@ export function createConnect({
     mergeProps,
     {
       pure = true,
-      areStatesEqual = strictEqual,
-      areOwnPropsEqual = shallowEqual,
+      areStatesEqual = strictEqual, // 严格比较是否相等
+      areOwnPropsEqual = shallowEqual, // 浅比较是否相等
       areStatePropsEqual = shallowEqual,
       areMergedPropsEqual = shallowEqual,
       ...extraOptions
@@ -69,6 +69,7 @@ export function createConnect({
       getDisplayName: name => `Connect(${name})`,
 
       // if mapStateToProps is falsy, the Connect component doesn't subscribe to store state changes
+      // 如果 mapStateToProps 为false，则不监听 store state
       shouldHandleStateChanges: Boolean(mapStateToProps),
 
       // passed through to selectorFactory

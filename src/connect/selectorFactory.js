@@ -1,5 +1,8 @@
 import verifySubselectors from './verifySubselectors'
-  
+
+/**
+ * pure 设置为 false 时调用，每次都会生成一个新的属性对象
+ */
 export function impureFinalPropsSelectorFactory(
   mapStateToProps,
   mapDispatchToProps,
@@ -14,7 +17,11 @@ export function impureFinalPropsSelectorFactory(
     )
   }
 }
-
+/**
+ * pure 设置为 true 时调用，会缓存上一次生成的 属性值，
+ * 然后每当要创建新的 selector 的时候，它会新进行判断 state 是否更新、ownProps是否进行更新，
+ * 如果都不进行更新的话，直接返回上一次缓存的值
+ */
 export function pureFinalPropsSelectorFactory(
   mapStateToProps,
   mapDispatchToProps,

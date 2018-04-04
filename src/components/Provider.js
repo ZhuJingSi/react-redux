@@ -21,12 +21,17 @@ function warnAboutReceivingStore() {
 
 export function createProvider(storeKey = 'store', subKey) {
     const subscriptionKey = subKey || `${storeKey}Subscription`
-
+    
     class Provider extends Component {
+        /**
+         * 将 store 绑到 context 上使子元素都可以访问到
+         */
         getChildContext() {
           return { [storeKey]: this[storeKey], [subscriptionKey]: null }
         }
-
+        /**
+         * 接收 props 中的 store 并挂载到实例上
+         */
         constructor(props, context) {
           super(props, context)
           this[storeKey] = props.store;
